@@ -10,7 +10,6 @@ df = pd.read_csv("heart.csv")
 '''Tratamento dos dados'''
 #print(df.head())
 
-
 #print(df.shape)
 
 #df.info()
@@ -21,49 +20,80 @@ df = pd.read_csv("heart.csv")
 #print(df.isnull().sum()) #RESULTADO: não tem valores nulos
 
 #Verificar dados duplicados
-#dupl=df.duplicated().sum() #RESULTADO: Existem linhas duplicadas
-#print(dupl)
-
-#Eliminar duplicados
-dropd = df.drop_duplicates()
-print(dropd)
+#print(df.duplicated().sum()) #RESULTADO: Existem linhas duplicadas
 
 
-'''Parece que os dados já estão tratados'''
+#Eliminar duplicados \ dc = doenças cardiacas
+dc = df.drop_duplicates()
+
+#print(dc.shape)
+
+#print(dc.describe())
+
+
+#plt.figure(figsize=(16,6))
+#sns.heatmap(dc.corr(), annot=True, cmap='Blues')
+#plt.show() 
+
 
 '''Exploração de Dados'''
 
 ''' Target
 
 ##contando os valores de sim e não da coluna target(alvo)
-print(df.target.value_counts())
+print(dc.target.value_counts())
 
 ## gráfico de contagem (count plot) que mostra a distribuição das classes(sim e não) na coluna "target" 
-sns.countplot(x="target", data=df, hue="target", palette="bwr", legend=False)
+sns.countplot(x="target", data=dc, hue="target", palette="bwr", legend=False)
 plt.xlabel("Target (0 = Não, 1= Sim)")
 plt.show()
 
 #calcula e imprime a porcentagem de pacientes que têm e não têm doença cardíaca
 
-countNoDisease = len(df[df.target == 0])
-countHaveDisease = len(df[df.target == 1])
+countNoDisease = len(dc[dc.target == 0])
+countHaveDisease = len(dc[dc.target == 1])
 print("Porcentagem de pacientes que não têm doença cardíaca: {:.2f}%".format((countNoDisease / (len(df.target))*100)))
 print("Porcentagem de pacientes que têm doença cardíaca: {:.2f}%".format((countHaveDisease / (len(df.target))*100))) 
 '''
 
 ''' Sexo
 ## gráfico de contagem (count plot) que mostra a distribuição das classes(female e male) na coluna "sex" 
-sns.countplot(x="sex", data=df, hue="sex", palette="mako_r", legend=True)
+sns.countplot(x="sex", data=dc, hue="sex", palette="mako_r", legend=True)
 plt.xlabel("Sex (0 = female, 1= male)")
 plt.show()
 
-countFemale = len(df[df.sex == 0])
-countMale = len(df[df.sex == 1])
+countFemale = len(dc[dc.sex == 0])
+countMale = len(dc[dc.sex == 1])
 
 print("Percentagem de pacientes do sexo feminino: {:.2f}%".format((countFemale/(len(df.sex))*100)))
 print("Percentagem de pacientes do sexo masculino: {:.2f}%".format((countMale / (len(df.sex))*100)))
 
 '''
 
+#print(dc.groupby('target').mean())
 
-#df.groupby('target').mean()
+#for c in dc.columns:
+ #   print(f"{c}: {dc[c].nunique()}")
+    
+categoricas = ['sex','cp','fbs','restecg','exang','slope','ca','thal']
+numericas = ['age','trestbps','chol','thalach','oldpeak']
+
+#Visualização da distribuição das variáveis 
+
+'''Distribuição dos dados para variáveis categóricas usando gráficos de contagem e para variáveis numéricas usando histogramas.
+Isso permite uma rápida análise visual das características dos dados e sua relação com a variável alvo '''
+
+'''
+for c in dc.columns:
+    plt.figure(figsize=(8,4))
+    plt.title(f"Coluna avaliada: {c}", fontsize = 16)
+    if c in categoricas:
+        sns.countplot(x = dc[c], hue = dc['target'])
+    if c in numericas:
+        sns.histplot(dc[c], kde = True)
+    plt.show()
+'''    
+#Removendo outliers
+
+plt.figure(figsize = (16, 6))
+sns.boxenplot(data = dc)
