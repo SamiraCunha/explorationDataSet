@@ -94,6 +94,50 @@ for c in dc.columns:
     plt.show()
 '''    
 #Removendo outliers
+'''ver outliers 
+plt.figure(figsize=(16, 6))
+sns.boxplot(data=dc, orient='h')  # Plotar o boxplot horizontalmente  
+plt.title('Boxplot das Variáveis no DataFrame')
+plt.xlabel('Valores')
+plt.ylabel('Variáveis')
+plt.show()
 
-plt.figure(figsize = (16, 6))
-sns.boxenplot(data = dc)
+#atributos com outliers: trestbps, chol, thalach
+
+print(dc.describe())
+'''
+
+# terstbps
+#testar quanto ficaria se tirasse 1 % 
+print(dc['trestbps'].quantile(0.99)) 
+
+dc1 = dc[dc["trestbps"] < dc['trestbps'].quantile(0.99)]
+'''
+plt.figure(figsize=(16, 6))
+sns.boxplot(data=dc1, orient='h')  # Plotar o boxplot horizontalmente  
+plt.title('Boxplot das Variáveis no DataFrame')
+plt.xlabel('Valores')
+plt.ylabel('Variáveis')
+plt.show()
+'''
+
+print(dc1.describe())
+
+
+# chol
+#print(dc1['chol'].quantile(0.98))
+
+dc2 = dc1[dc1["chol"] < dc1['chol'].quantile(0.98)]
+#print(dc2.describe())
+'''''
+plt.figure(figsize=(16, 6))
+sns.boxplot(data=dc2, orient='h')  # Plotar o boxplot horizontalmente  
+plt.title('Boxplot das Variáveis no DataFrame')
+plt.xlabel('Valores')
+plt.ylabel('Variáveis')
+plt.show()
+'''
+
+#nesse caso tira -se o excesso do inicio
+print(dc2['thalach'].quantile(0.005))
+
