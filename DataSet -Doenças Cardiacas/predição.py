@@ -121,7 +121,7 @@ plt.ylabel('Variáveis')
 plt.show()
 '''
 
-print(dc1.describe())
+#print(dc1.describe())
 
 
 # chol
@@ -139,5 +139,14 @@ plt.show()
 '''
 
 #nesse caso tira -se o excesso do inicio
-print(dc2['thalach'].quantile(0.005))
+# print(dc2['thalach'].quantile(0.005))
 
+dc3 = dc2[dc2["thalach"] > dc2['thalach'].quantile(0.005)]
+
+#print(dc3.describe())
+
+categoricas = ['sex','cp','fbs','restecg','exang','slope','ca','thal']
+numericas = ['age','trestbps','chol','thalach','oldpeak']
+
+dc4 = pd.get_dummies(dc3, columns = ['sex','cp','fbs','restecg','exang','slope','ca','thal'])
+print(dc4)
