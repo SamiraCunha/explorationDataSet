@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
 
 df = pd.read_csv("heart.csv")
 
@@ -247,6 +248,7 @@ def logistic_regression(x_train,y_train,x_test,y_test,learningRate,iteration):
     
 logistic_regression(x_train,y_train,x_test,y_test,1,100)
     
+#Sklearn Logistic Regression
 accuracies = {}
 
 lr = LogisticRegression()
@@ -255,3 +257,76 @@ acc = lr.score(x_test.T,y_test.T)*100
 
 accuracies['Logistic Regression'] = acc
 print("Test Accuracy {:.2f}%".format(acc))
+
+''' 
+# KNN Model
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier(n_neighbors = 2)  # n_neighbors means k
+knn.fit(x_train.T, y_train.T)
+prediction = knn.predict(x_test.T)
+
+print("{} NN Score: {:.2f}%".format(2, knn.score(x_test.T, y_test.T)*100))
+'''
+
+#Support Vector Machine (SVM) Algorithm
+svm = SVC(random_state = 1)
+svm.fit(x_train.T, y_train.T)
+
+acc = svm.score(x_test.T,y_test.T)*100
+accuracies['SVM'] = acc
+print("Test Accuracy of SVM Algorithm: {:.2f}%".format(acc))
+
+#Naive Bayes Algorithm
+from sklearn.naive_bayes import GaussianNB
+nb = GaussianNB()
+nb.fit(x_train.T, y_train.T)
+
+acc = nb.score(x_test.T,y_test.T)*100
+accuracies['Naive Bayes'] = acc
+print("Accuracy of Naive Bayes: {:.2f}%".format(acc))
+
+#Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+dtc = DecisionTreeClassifier()
+dtc.fit(x_train.T, y_train.T)
+
+acc = dtc.score(x_test.T, y_test.T)*100
+accuracies['Decision Tree'] = acc
+print("Decision Tree Test Accuracy {:.2f}%".format(acc))
+
+# Random Forest Classification
+from sklearn.ensemble import RandomForestClassifier
+rf = RandomForestClassifier(n_estimators = 1000, random_state = 1)
+rf.fit(x_train.T, y_train.T)
+
+acc = rf.score(x_test.T,y_test.T)*100
+accuracies['Random Forest'] = acc
+print("Random Forest Algorithm Accuracy Score : {:.2f}%".format(acc))
+
+
+#Comparando modelos
+colors = ["purple", "green", "orange", "magenta","#CFC60E"]
+
+sns.set_style("whitegrid")
+plt.figure(figsize=(16,5))
+plt.yticks(np.arange(0,100,10))
+plt.ylabel("Accuracy %")
+plt.xlabel("Algorithms")
+sns.barplot(x=list(accuracies.keys()), y=list(accuracies.values()), palette=colors, hue=list(accuracies.keys()))
+plt.show()
+
+# Valores previstos
+y_head_lr = lr.predict(x_test.T)
+y_head_svm = svm.predict(x_test.T)
+y_head_nb = nb.predict(x_test.T)
+y_head_dtc = dtc.predict(x_test.T)
+y_head_rf = rf.predict(x_test.T)
+
+from sklearn.metrics import confusion_matrix
+
+cm_lr = confusion_matrix(y_test,y_head_lr)
+cm_svm = confusion_matrix(y_test,y_head_svm)
+cm_nb = confusion_matrix(y_test,y_head_nb)
+cm_dtc = confusion_matrix(y_test,y_head_dtc)
+cm_rf = confusion_matrix(y_test,y_head_rf)
